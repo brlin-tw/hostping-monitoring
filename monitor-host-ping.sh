@@ -7,6 +7,14 @@
 CHECK_INTERVAL="${CHECK_INTERVAL:-60}"
 
 init(){
+    if ! check_runtime_parameters \
+        "${CHECK_INTERVAL}"; then
+        printf \
+            'Error: Runtime parameter check failed.\n' \
+            1>&2
+        exit 1
+    fi
+
     while true; do
         printf \
             'Info: Sleep for %s seconds until the next check iteration...\n' \
@@ -18,6 +26,21 @@ init(){
             exit 2
         fi
     done
+}
+
+# Check whether the value of the runtime parameters are valid
+check_runtime_parameters(){
+    local check_interval="${1}"; shift
+
+    printf \
+        "Info: Validating the CHECK_INTERVAL parameter's value...\\n"
+    local regex_non_negative_integers='^(0|[1-9][[:digit:]]*)$'
+    if ! [[ "${check_interval}" =~ ${regex_non_negative_integers} ]]; then
+        printf \
+            "Error: The CHECK_INTERVAL parameter's value should be an non-negative integer.\\n" \
+            1>&2
+        return 2
+    fi
 }
 
 printf \
