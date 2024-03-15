@@ -5,17 +5,37 @@
 # Copyright 2024 林博仁(Buo-ren, Lin) <buo.ren.lin@gmail.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
 CHECK_INTERVAL="${CHECK_INTERVAL:-60}"
+CHECK_HOST="${CHECK_HOST:-localhost}"
+CHECK_PING_TIMEOUT="${CHECK_PING_TIMEOUT:-1}"
 
 init(){
     if ! check_runtime_parameters \
-        "${CHECK_INTERVAL}"; then
+        "${CHECK_INTERVAL}" \
+        "${CHECK_PING_TIMEOUT}"; then
         printf \
             'Error: Runtime parameter check failed.\n' \
             1>&2
         exit 1
     fi
 
+    local -a ping_opts=(
+        # Only ping once
+        -c 1
+
+        # Set timeout for waiting the response packet
+        -W "${CHECK_PING_TIMEOUT}"
+
+        # Don't display individual ping record
+        -q
+    )
     while true; do
+        if ! ping "${ping_opts[@]}" "${CHECK_HOST}" >/dev/null; then
+            printf \
+                'Warning: The ping attempt to the host "%s" has failed.\n' \
+                "${CHECK_HOST}" \
+                1>&2
+        fi
+
         printf \
             'Info: Sleep for %s seconds until the next check iteration...\n' \
             "${CHECK_INTERVAL}"
@@ -31,6 +51,7 @@ init(){
 # Check whether the value of the runtime parameters are valid
 check_runtime_parameters(){
     local check_interval="${1}"; shift
+    local check_ping_timeout="${1}"; shift
 
     printf \
         "Info: Validating the CHECK_INTERVAL parameter's value...\\n"
@@ -38,6 +59,16 @@ check_runtime_parameters(){
     if ! [[ "${check_interval}" =~ ${regex_non_negative_integers} ]]; then
         printf \
             "Error: The CHECK_INTERVAL parameter's value should be an non-negative integer.\\n" \
+            1>&2
+        return 2
+    fi
+
+    printf \
+        "Info: Validating the CHECK_PING_TIMEOUT parameter's value...\\n"
+    local regex_non_negative_fraction_numbers_and_integers='^(0|[1-9][[:digit:]]*)(\.[[:digit:]]+)?$'
+    if ! [[ "${check_ping_timeout}" =~ ${regex_non_negative_fraction_numbers_and_integers} ]]; then
+        printf \
+            "Error: The CHECK_PING_TIMEOUT parameter's value should be an non-negative fractional number or integer.\\n" \
             1>&2
         return 2
     fi

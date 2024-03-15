@@ -27,6 +27,18 @@ The seconds between each check action.
 
 **Default value:** `60`
 
+### CHECK_HOST
+
+The host to check ping response from.
+
+**Default value:** `localhost`
+
+### CHECK_PING_TIMEOUT
+
+How long to wait for the ICMP response before considering the ping check has failed.  The unit is in seconds(fractions are allowed).
+
+**Default value:** `1`
+
 ## References
 
 In the development of this product, the following material is referenced:
