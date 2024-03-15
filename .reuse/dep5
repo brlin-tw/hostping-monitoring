@@ -1,0 +1,10 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: 林博仁 Buo-ren, Lin / Hostping monitoring · GitLab
+Upstream-Contact: Issues · 林博仁 Buo-ren, Lin / Hostping monitoring · GitLab <https://gitlab.com/brlin/hostping-monitoring/-/issues>
+Source: https://gitlab.com/brlin/hostping-monitoring
+
+Files:
+ *README.md
+ */README.md
+Copyright: 2024 林博仁(Buo-ren, Lin) <Buo.Ren.Lin@gmail.com>
+License: CC-BY-SA-4.0+
