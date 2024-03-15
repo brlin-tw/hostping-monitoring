@@ -27,6 +27,13 @@ The seconds between each check action.
 
 **Default value:** `60`
 
+## References
+
+In the development of this product, the following material is referenced:
+
+* ping(1) manual page  
+  Explains the `-W` command-line option and the command's exit status codes.
+
 ## Licensing
 
 Unless otherwise noted(individual file's header/[REUSE DEP5](.reuse/dep5)), this product is licensed under [the version 3 of the GNU Affero General Public License](https://www.gnu.org/licenses/agpl-3.0.html), or any of its recent versions you would prefer.
