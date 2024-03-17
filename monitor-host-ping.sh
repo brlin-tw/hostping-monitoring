@@ -4,13 +4,13 @@
 #
 # Copyright 2024 林博仁(Buo-ren, Lin) <buo.ren.lin@gmail.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-CHECK_INTERVAL="${CHECK_INTERVAL:-60}"
+MONITOR_INTERVAL="${MONITOR_INTERVAL:-60}"
 CHECK_HOST="${CHECK_HOST:-localhost}"
 CHECK_PING_TIMEOUT="${CHECK_PING_TIMEOUT:-1}"
 
 init(){
     if ! check_runtime_parameters \
-        "${CHECK_INTERVAL}" \
+        "${MONITOR_INTERVAL}" \
         "${CHECK_PING_TIMEOUT}"; then
         printf \
             'Error: Runtime parameter check failed.\n' \
@@ -38,8 +38,8 @@ init(){
 
         printf \
             'Info: Sleep for %s seconds until the next check iteration...\n' \
-            "${CHECK_INTERVAL}"
-        if ! sleep "${CHECK_INTERVAL}"; then
+            "${MONITOR_INTERVAL}"
+        if ! sleep "${MONITOR_INTERVAL}"; then
             printf \
                 'Error: Unable to sleep until the next check iteration.\n' \
                 1>&2
@@ -50,15 +50,15 @@ init(){
 
 # Check whether the value of the runtime parameters are valid
 check_runtime_parameters(){
-    local check_interval="${1}"; shift
+    local monitor_interval="${1}"; shift
     local check_ping_timeout="${1}"; shift
 
     printf \
-        "Info: Validating the CHECK_INTERVAL parameter's value...\\n"
+        "Info: Validating the MONITOR_INTERVAL parameter's value...\\n"
     local regex_non_negative_integers='^(0|[1-9][[:digit:]]*)$'
-    if ! [[ "${check_interval}" =~ ${regex_non_negative_integers} ]]; then
+    if ! [[ "${monitor_interval}" =~ ${regex_non_negative_integers} ]]; then
         printf \
-            "Error: The CHECK_INTERVAL parameter's value should be an non-negative integer.\\n" \
+            "Error: The MONITOR_INTERVAL parameter's value should be an non-negative integer.\\n" \
             1>&2
         return 2
     fi

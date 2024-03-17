@@ -21,9 +21,9 @@ The operation that the monitoring solution took when a certain host is considere
 
 The following section documents the environment variables that will change the monitoring program's runtime behavoirs:
 
-### CHECK_INTERVAL
+### MONITOR_INTERVAL
 
-The seconds between each check action.
+The seconds between each host monitoring check action.
 
 **Default value:** `60`
 
