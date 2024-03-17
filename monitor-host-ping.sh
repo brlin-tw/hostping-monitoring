@@ -41,7 +41,8 @@ init(){
             "${CHECK_INTERVAL}"
         if ! sleep "${CHECK_INTERVAL}"; then
             printf \
-                'Error: Unable to sleep until the next check iteration.\n'
+                'Error: Unable to sleep until the next check iteration.\n' \
+                1>&2
             exit 2
         fi
     done
