@@ -39,6 +39,60 @@ How long to wait for the ICMP response before considering the ping check has fai
 
 **Default value:** `1.0`
 
+## Verification
+
+For Linux operating system distributions that uses either:
+
+* The iptables packet filtering system
+* iptables-nft atop of the nftables packet filtering system
+
+Run the following command to drop the outgoing response packets of ICMP echo requests:
+
+```bash
+iptables_opts_drop_response=(
+    # Append rule to the OUTPUT chain
+    -A OUTPUT
+
+    # Select loopback as the outgoing network interface
+    -o lo
+
+    # Drop ICMP echo response packets
+    -p icmp --icmp-type echo-reply -j DROP
+)
+if ! sudo iptables-nft "${iptables_opts_drop_response[@]}"; then
+    printf \
+        'Error: Unable to filter the outgoing response packets of ICMP echo requests.\n' \
+        1>&2
+fi
+```
+
+You may now emulate the monitoring events by running the following command in the product directory:
+
+```bash
+MONITOR_INTERVAL=1 ./monitor-host-ping.sh
+```
+
+To revert the change to the firewall, run the following command (in a different text terminal window or terminal multiplexer pane:
+
+```bash
+iptables_opts_remove_rule=(
+    # Delete rule of the OUTPUT chain that matches the following rule
+    # specification
+    -D OUTPUT
+
+    # Select loopback as the outgoing network interface
+    -o lo
+
+    # Drop ICMP echo response packets
+    -p icmp --icmp-type echo-reply -j DROP
+)
+if ! sudo iptables-nft "${iptables_opts_remove_rule[@]}"; then
+    printf \
+        'Error: Unable to remove the filtering of the outgoing response packets of ICMP echo requests.\n' \
+        1>&2
+fi
+```
+
 ## References
 
 In the development of this product, the following material is referenced:
