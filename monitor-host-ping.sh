@@ -51,28 +51,47 @@ init(){
 
 # Check whether the value of the runtime parameters are valid
 check_runtime_parameters(){
-    local monitor_interval="${1}"; shift
-    local check_ping_timeout="${1}"; shift
+    # These variables are referenced indirectly
+    # shellcheck disable=SC2034
+    {
+        local monitor_interval="${1}"; shift
+        local check_ping_timeout="${1}"; shift
+    }
 
-    printf \
-        "Info: Validating the MONITOR_INTERVAL parameter's value...\\n"
     local regex_non_negative_integers='^(0|[1-9][[:digit:]]*)$'
-    if ! [[ "${monitor_interval}" =~ ${regex_non_negative_integers} ]]; then
-        printf \
-            "Error: The MONITOR_INTERVAL parameter's value should be an non-negative integer.\\n" \
-            1>&2
-        return 2
-    fi
+    local regex_non_negative_fraction_numbers='^(0|[1-9][[:digit:]]*)(\.[[:digit:]]+)?$'
 
-    printf \
-        "Info: Validating the CHECK_PING_TIMEOUT parameter's value...\\n"
-    local regex_non_negative_fraction_numbers_and_integers='^(0|[1-9][[:digit:]]*)(\.[[:digit:]]+)?$'
-    if ! [[ "${check_ping_timeout}" =~ ${regex_non_negative_fraction_numbers_and_integers} ]]; then
+    local -a non_negative_integer_parameters=(
+        monitor_interval
+    )
+    for parameter in "${non_negative_integer_parameters[@]}"; do
         printf \
-            "Error: The CHECK_PING_TIMEOUT parameter's value should be an non-negative fractional number or integer.\\n" \
-            1>&2
-        return 2
-    fi
+            "Info: Validating the %s parameter's value...\\n" \
+            "${parameter^^*}"
+        if ! [[ "${!parameter}" =~ ${regex_non_negative_integers} ]]; then
+            printf \
+                "Error: The %s parameter's value should be an non-negative integer.\\n" \
+                "${parameter^^*}" \
+                1>&2
+            return 2
+        fi
+    done
+
+    local -a non_negative_fraction_parameters=(
+        check_ping_timeout
+    )
+    for parameter in "${non_negative_fraction_parameters[@]}"; do
+        printf \
+            "Info: Validating the %s parameter's value...\\n" \
+            "${parameter^^*}"
+        if ! [[ "${!parameter}" =~ ${regex_non_negative_fraction_numbers} ]]; then
+            printf \
+                "Error: The %s parameter's value should be an non-negative fractional number or integer.\\n" \
+                "${parameter^^*}" \
+                1>&2
+            return 2
+        fi
+    done
 }
 
 printf \
