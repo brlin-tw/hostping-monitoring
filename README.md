@@ -37,7 +37,7 @@ The host to check ping response from.
 
 How long to wait for the ICMP response before considering the ping check has failed.  The unit is in seconds(fractions are allowed).
 
-**Default value:** `1`
+**Default value:** `1.0`
 
 ## References
 

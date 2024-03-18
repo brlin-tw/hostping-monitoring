@@ -5,7 +5,7 @@
 # Copyright 2024 林博仁(Buo-ren, Lin) <buo.ren.lin@gmail.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
 CHECK_HOST="${CHECK_HOST:-localhost}"
-CHECK_PING_TIMEOUT="${CHECK_PING_TIMEOUT:-1}"
+CHECK_PING_TIMEOUT="${CHECK_PING_TIMEOUT:-1.0}"
 
 MONITOR_INTERVAL="${MONITOR_INTERVAL:-60}"
 
