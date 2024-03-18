@@ -39,6 +39,18 @@ How long to wait for the ICMP response before considering the ping check has fai
 
 **Default value:** `1.0`
 
+### MONITOR_HOST_UP_THRESHOLD
+
+Consequential successful check quantity to consider the host is up.
+
+**Default value:** `2`
+
+### MONITOR_HOST_DOWN_THRESHOLD
+
+Consequential failure check quantity to consider the host is down.
+
+**Default value:** `2`
+
 ## Verification
 
 For Linux operating system distributions that uses either:
@@ -99,6 +111,8 @@ In the development of this product, the following material is referenced:
 
 * ping(1) manual page  
   Explains the `-W` command-line option and the command's exit status codes.
+* [Arithmetic Evaluation Explained | OpenAI ChatGPT](https://chat.openai.com/share/5f5baedd-6414-4971-99cc-910dbea49b7a)  
+  Explains the menaing of the "arithmetic evaluation ( Shell Arithmetic) is performed when the variable is assigned a value." part of the `-i` command-line option description of the `declare` bash builtin command.
 
 ## Licensing
 

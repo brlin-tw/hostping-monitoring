@@ -8,17 +8,29 @@ CHECK_HOST="${CHECK_HOST:-localhost}"
 CHECK_PING_TIMEOUT="${CHECK_PING_TIMEOUT:-1.0}"
 
 MONITOR_INTERVAL="${MONITOR_INTERVAL:-10}"
+MONITOR_HOST_UP_THRESHOLD="${MONITOR_HOST_UP_THRESHOLD:-2}"
+MONITOR_HOST_DOWN_THRESHOLD="${MONITOR_HOST_DOWN_THRESHOLD:-2}"
 
 init(){
     if ! check_runtime_parameters \
         "${MONITOR_INTERVAL}" \
-        "${CHECK_PING_TIMEOUT}"; then
+        "${CHECK_PING_TIMEOUT}" \
+        "${MONITOR_HOST_UP_THRESHOLD}" \
+        "${MONITOR_HOST_DOWN_THRESHOLD}"; then
         printf \
             'Error: Runtime parameter check failed.\n' \
             1>&2
         exit 1
     fi
 
+    local host_state=UP
+    printf \
+        'Info: Assuming the default host state is %s.\n' \
+        "${host_state}"
+
+    local -i \
+        consequential_successful_check_count=0 \
+        consequential_failure_check_count=0
     local -a ping_opts=(
         # Only ping once
         -c 1
@@ -29,13 +41,55 @@ init(){
         # Don't display individual ping record
         -q
     )
+    local -i overflow_prevention_counter_upper_limit=9999
     while true; do
         if ! ping "${ping_opts[@]}" "${CHECK_HOST}" >/dev/null; then
             printf \
                 'Warning: The ping attempt to the host "%s" has failed.\n' \
                 "${CHECK_HOST}" \
                 1>&2
+            # NOTE: When a arithmetic expression is evaluated to zero,
+            # the '((' compound command has a non-zero exit status ,
+            # which we do not like it to trigger errexit
+            ((consequential_successful_check_count = 0)) || true
+
+            # Avoid overflowing the counter
+            if test "${consequential_failure_check_count}" -eq "${overflow_prevention_counter_upper_limit}"; then
+                : # Don't increment the counter
+            else
+                ((consequential_failure_check_count += 1))
+            fi
+        else
+            ((consequential_failure_check_count = 0)) || true
+            # Avoid overflowing the counter
+            if test "${consequential_failure_check_count}" -eq "${overflow_prevention_counter_upper_limit}"; then
+                : # Don't increment the counter
+            else
+                ((consequential_successful_check_count += 1))
+            fi
         fi
+
+        if test "${host_state}" == UP \
+            && test "${consequential_failure_check_count}" -ge "${MONITOR_HOST_DOWN_THRESHOLD}"; then
+            host_state=DOWN
+            printf \
+                'Warning: The host DOWN threshold has exceeded, sending alert notification...\n' \
+                1>&2
+        fi
+
+        if test "${host_state}" == DOWN \
+            && test "${consequential_successful_check_count}" -ge "${MONITOR_HOST_UP_THRESHOLD}"; then
+            host_state=UP
+            printf \
+                'Info: The host UP threshold has exceeded, sending alert notification...\n'
+        fi
+
+        printf \
+            'Debug: host_state=%s consequential_successful_check_count=%s consequential_failure_check_count=%s.\n' \
+            "${host_state}" \
+            "${consequential_successful_check_count}" \
+            "${consequential_failure_check_count}" \
+            1>&2
 
         printf \
             'Info: Sleep for %s seconds until the next check iteration...\n' \
@@ -56,6 +110,8 @@ check_runtime_parameters(){
     {
         local monitor_interval="${1}"; shift
         local check_ping_timeout="${1}"; shift
+        local monitor_host_up_threshold="${1}"; shift
+        local monitor_host_down_threshold="${1}"; shift
     }
 
     local regex_non_negative_integers='^(0|[1-9][[:digit:]]*)$'
@@ -63,6 +119,8 @@ check_runtime_parameters(){
 
     local -a non_negative_integer_parameters=(
         monitor_interval
+        monitor_host_up_threshold
+        monitor_host_down_threshold
     )
     for parameter in "${non_negative_integer_parameters[@]}"; do
         printf \
