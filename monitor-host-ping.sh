@@ -7,7 +7,7 @@
 CHECK_HOST="${CHECK_HOST:-localhost}"
 CHECK_PING_TIMEOUT="${CHECK_PING_TIMEOUT:-1.0}"
 
-MONITOR_INTERVAL="${MONITOR_INTERVAL:-60}"
+MONITOR_INTERVAL="${MONITOR_INTERVAL:-10}"
 
 init(){
     if ! check_runtime_parameters \

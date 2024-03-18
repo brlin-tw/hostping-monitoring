@@ -25,7 +25,7 @@ The following section documents the environment variables that will change the m
 
 The seconds between each host monitoring check action.
 
-**Default value:** `60`
+**Default value:** `10`
 
 ### CHECK_HOST
 
