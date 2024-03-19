@@ -15,7 +15,7 @@ This application requires the following dependencies to be installed and availab
   For the following functionalities including but not limited to:
     + For determining the monitoring program's full path.
     + For letting the monitoring process to sleep during the montioring interval.
-* [telegram-send](https://github.com/rahiel/telegram-send?tab=readme-ov-file)  
+* [telegram-send](https://github.com/rahiel/telegram-send)  
   For sending Telegram messages to your specified user/group/channel chat.  You'll also need to have your Telegram bot registered, its authentication token acquired, and [have the telegram-send utility configured to be able to send messages to your specified destination.](https://github.com/rahiel/telegram-send#installation)
 
 ## Terminology
