@@ -5,6 +5,19 @@ Send Telegram alert when the specified host does not respond to ICMP echo reques
 <https://gitlab.com/brlin/hostping-monitoring>  
 [![The GitLab CI pipeline status badge of the project's `main` branch](https://gitlab.com/brlin/hostping-monitoring/badges/main/pipeline.svg?ignore_skipped=true "Click here to check out the comprehensive status of the GitLab CI pipelines")](https://gitlab.com/brlin/hostping-monitoring/-/pipelines) [![GitHub Actions workflow status badge](https://github.com/brlin-tw/hostping-monitoring/actions/workflows/check-potential-problems.yml/badge.svg "GitHub Actions workflow status")](https://github.com/brlin-tw/hostping-monitoring/actions/workflows/check-potential-problems.yml) [![pre-commit enabled badge](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white "This project uses pre-commit to check potential problems")](https://pre-commit.com/) [![REUSE Specification compliance badge](https://api.reuse.software/badge/gitlab.com/brlin/hostping-monitoring "This project complies to the REUSE specification to decrease software licensing costs")](https://api.reuse.software/info/gitlab.com/brlin/hostping-monitoring)
 
+## Prerequisites
+
+This application requires the following dependencies to be installed and available in your command search PATHs:
+
+* [Bash](https://www.gnu.org/software/bash/)  
+  For running the monitoring program itself.  Requires Bash >=4.2.
+* [Coreutils - GNU core utilities](https://www.gnu.org/software/coreutils/)(or feature-wise equivalent counterparts)  
+  For the following functionalities including but not limited to:
+    + For determining the monitoring program's full path.
+    + For letting the monitoring process to sleep during the montioring interval.
+* [telegram-send](https://github.com/rahiel/telegram-send?tab=readme-ov-file)  
+  For sending Telegram messages to user/group/channel.
+
 ## Terminology
 
 The following is the terms specifically used in this solution:
