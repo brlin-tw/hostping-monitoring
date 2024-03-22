@@ -4,19 +4,31 @@
 #
 # Copyright 2024 林博仁(Buo-ren, Lin) <buo.ren.lin@gmail.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-CHECK_HOST="${CHECK_HOST:-localhost}"
-CHECK_PING_TIMEOUT="${CHECK_PING_TIMEOUT:-1.0}"
-
-MONITOR_INTERVAL="${MONITOR_INTERVAL:-10}"
-MONITOR_HOST_UP_THRESHOLD="${MONITOR_HOST_UP_THRESHOLD:-2}"
-MONITOR_HOST_DOWN_THRESHOLD="${MONITOR_HOST_DOWN_THRESHOLD:-2}"
 
 init(){
+    local environment_file="${script_dir}/.env"
+    if ! test -e "${environment_file}"; then
+        printf \
+            'Error: The environment file(.env) does not exist in the product directory.\n' \
+            1>&2
+        exit 1
+    fi
+
+    printf \
+        'Info: Loading the environment file...\n'
+    # shellcheck source=.env
+    if ! source "${environment_file}"; then
+        printf \
+            'Error: Unable to load the environment file.\n' \
+            1>&2
+        exit 2
+    fi
+
     if ! check_runtime_parameters \
-        "${MONITOR_INTERVAL}" \
-        "${CHECK_PING_TIMEOUT}" \
-        "${MONITOR_HOST_UP_THRESHOLD}" \
-        "${MONITOR_HOST_DOWN_THRESHOLD}"; then
+        MONITOR_INTERVAL \
+        CHECK_PING_TIMEOUT \
+        MONITOR_HOST_UP_THRESHOLD \
+        MONITOR_HOST_DOWN_THRESHOLD; then
         printf \
             'Error: Runtime parameter check failed.\n' \
             1>&2
@@ -108,19 +120,45 @@ check_runtime_parameters(){
     # These variables are referenced indirectly
     # shellcheck disable=SC2034
     {
-        local monitor_interval="${1}"; shift
-        local check_ping_timeout="${1}"; shift
-        local monitor_host_up_threshold="${1}"; shift
-        local monitor_host_down_threshold="${1}"; shift
+        local -n monitor_interval_ref="${1}"; shift
+        local -n check_ping_timeout_ref="${1}"; shift
+        local -n monitor_host_up_threshold_ref="${1}"; shift
+        local -n monitor_host_down_threshold_ref="${1}"; shift
     }
 
     local regex_non_negative_integers='^(0|[1-9][[:digit:]]*)$'
     local regex_non_negative_fraction_numbers='^(0|[1-9][[:digit:]]*)(\.[[:digit:]]+)?$'
 
+    local runtime_parameter_assignment_check_failed=false
+    local -a all_runtime_parameters=(
+        monitor_interval_ref
+        check_ping_timeout_ref
+        monitor_host_up_threshold_ref
+        monitor_host_down_threshold_ref
+    )
+    for parameter in "${all_runtime_parameters[@]}"; do
+        if ! test -v "${parameter}"; then
+            runtime_parameter_assignment_check_failed=true
+
+            parameter_name="${parameter%_ref}"
+
+            printf \
+                'Error: The %s runtime parameter is not set.\n' \
+                "${parameter_name^^*}" \
+                1>&2
+        fi
+    done
+    if test "${runtime_parameter_assignment_check_failed}" == true; then
+        printf \
+            'Error: Runtime parameter assignment check failed.\n' \
+            1>&2
+        return 1
+    fi
+
     local -a non_negative_integer_parameters=(
-        monitor_interval
-        monitor_host_up_threshold
-        monitor_host_down_threshold
+        monitor_interval_ref
+        monitor_host_up_threshold_ref
+        monitor_host_down_threshold_ref
     )
     for parameter in "${non_negative_integer_parameters[@]}"; do
         printf \
@@ -136,7 +174,7 @@ check_runtime_parameters(){
     done
 
     local -a non_negative_fraction_parameters=(
-        check_ping_timeout
+        check_ping_timeout_ref
     )
     for parameter in "${non_negative_fraction_parameters[@]}"; do
         printf \

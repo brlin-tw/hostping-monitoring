@@ -6,7 +6,7 @@
 # This file is based on The Common .gitignore Templates
 # https://github.com/the-common/gitignore-templates
 #
-# Copyright 2022 林博仁(Buo-ren, Lin) <Buo.Ren.Lin@gmail.com>
+# Copyright 2024 林博仁(Buo-ren, Lin) <Buo.Ren.Lin@gmail.com>
 # SPDX-License-Identifier: CC-BY-SA-4.0
 
 # Don't track regular Unix hidden files
@@ -88,3 +88,6 @@
 
 # Don't track continuous integration virtual environments
 /continuous-integration/venv/
+
+# Do track the environment file
+!/.env
