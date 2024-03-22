@@ -131,6 +131,8 @@ check_runtime_parameters(){
     local regex_non_negative_integers='^(0|[1-9][[:digit:]]*)$'
     local regex_non_negative_fraction_numbers='^(0|[1-9][[:digit:]]*)(\.[[:digit:]]+)?$'
 
+    printf \
+        'Info: Checking whether all the runtime parameters are set...\n'
     local runtime_parameter_assignment_check_failed=false
     local -a all_runtime_parameters=(
         monitor_interval_ref
@@ -157,6 +159,8 @@ check_runtime_parameters(){
         return 1
     fi
 
+    printf \
+        'Info: Validating the values of the non-negative integer parameters...\n'
     local -a non_negative_integer_parameters=(
         monitor_interval_ref
         monitor_host_up_threshold_ref
@@ -175,6 +179,8 @@ check_runtime_parameters(){
         fi
     done
 
+    printf \
+        'Info: Validating the values of the non-negative fraction parameters...\n'
     local -a non_negative_fraction_parameters=(
         check_ping_timeout_ref
     )
