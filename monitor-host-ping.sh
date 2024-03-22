@@ -126,6 +126,8 @@ check_runtime_parameters(){
         local -n monitor_host_down_threshold_ref="${1}"; shift
     }
 
+    printf \
+        'Info: Checking the runtime parameters...\n'
     local regex_non_negative_integers='^(0|[1-9][[:digit:]]*)$'
     local regex_non_negative_fraction_numbers='^(0|[1-9][[:digit:]]*)(\.[[:digit:]]+)?$'
 
