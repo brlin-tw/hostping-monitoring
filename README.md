@@ -44,7 +44,7 @@ The operation that the monitoring solution took when a certain host is considere
 
 ## Parameters that will change the monitoring program's behaviors
 
-The following section documents the parameters that will change the monitoring program's runtime behavoirs:
+The following section documents the parameters that will change the monitoring program's runtime behaviors:
 
 ### MONITOR_INTERVAL
 
