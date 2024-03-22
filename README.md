@@ -18,6 +18,18 @@ This application requires the following dependencies to be installed and availab
 * [telegram-send](https://github.com/rahiel/telegram-send)  
   For sending Telegram messages to your specified user/group/channel chat.  You'll also need to have your Telegram bot registered, its authentication token acquired, and [have the telegram-send utility configured to be able to send messages to your specified destination.](https://github.com/rahiel/telegram-send#installation)
 
+## Usage
+
+1. Download the product's release archive from [the Releases page](https://gitlab.com/brlin/hostping-monitoring/-/releases).
+1. Extract the downloaded release archive.
+1. Use your preferred text editor application to edit [the .env environment file](.env) in the extracted release archive, refer [the Parameters that will change the monitoring program's behaviors section](#parameters-that-will-change-the-monitoring-programs-behaviors) for more information.
+1. Launch a text terminal emulator application.
+1. In the text terminal emulator application, run the following command to start the monitoring process:
+
+    ```bash
+    /path/to/hostping-monitoring-X.Y.Z/monitor-host-ping.sh
+    ```
+
 ## Terminology
 
 The following is the terms specifically used in this solution:
@@ -30,9 +42,9 @@ The operation that checks whether a certain host is alive.
 
 The operation that the monitoring solution took when a certain host is considered DOWN or UP.
 
-## Environment variables that will change the monitoring program's behaviors
+## Parameters that will change the monitoring program's behaviors
 
-The following section documents the environment variables that will change the monitoring program's runtime behavoirs:
+The following section documents the parameters that will change the monitoring program's runtime behavoirs:
 
 ### MONITOR_INTERVAL
 
