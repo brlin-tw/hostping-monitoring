@@ -22,3 +22,7 @@
 /.reuse/ -export-ignore
 /.reuse/* export-ignore
 /.reuse/dep5 -export-ignore
+
+# Keep environment file in the release archive as a template
+# configuration
+/.env -export-ignore
