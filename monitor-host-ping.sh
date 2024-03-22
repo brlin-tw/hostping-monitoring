@@ -40,6 +40,22 @@ init(){
         'Info: Assuming the default host state is %s.\n' \
         "${host_state}"
 
+    printf \
+        'Info: Start monitoring host "%s"...\n' \
+        "${CHECK_HOST}"
+    local -a telegram_send_opts=(
+        --format markdown
+
+        # Send text from stdin
+        --stdin
+    )
+    if ! printf '*Hostping monitoring alert*\n\nStart monitoring host "%s"\n' "${CHECK_HOST}" | telegram-send "${telegram_send_opts[@]}"; then
+        printf \
+            'Error: Unable to send the monitoring start alert message.\n' \
+            1>&2
+        exit 2
+    fi
+
     local -i \
         consequential_successful_check_count=0 \
         consequential_failure_check_count=0
@@ -87,6 +103,12 @@ init(){
             printf \
                 'Warning: The host DOWN threshold has exceeded, sending alert notification...\n' \
                 1>&2
+            if ! printf '*Hostping monitoring alert*\n\n*Warning:* The "%s" host does not respond to the ICMP echo packets and is considered to be *DOWN*, please verify\.\n' "${CHECK_HOST}" | telegram-send "${telegram_send_opts[@]}"; then
+                printf \
+                    'Error: Unable to send the monitoring start alert message.\n' \
+                    1>&2
+                exit 2
+            fi
         fi
 
         if test "${host_state}" == DOWN \
@@ -94,6 +116,12 @@ init(){
             host_state=UP
             printf \
                 'Info: The host UP threshold has exceeded, sending alert notification...\n'
+            if ! printf '*Hostping monitoring alert*\n\n*Info:* The "%s" host  resumed responding the ICMP echo packets and is now considered *UP*\.\n' "${CHECK_HOST}" | telegram-send "${telegram_send_opts[@]}"; then
+                printf \
+                    'Error: Unable to send the monitoring start alert message.\n' \
+                    1>&2
+                exit 2
+            fi
         fi
 
         printf \
@@ -208,6 +236,7 @@ check_runtime_parameters(){
     local flag_external_command_check_failed=false
     local -a required_commands=(
         sleep
+        telegram-send
     )
     for command in "${required_commands[@]}"; do
         if ! command -v "${command}" >/dev/null; then
