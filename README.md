@@ -106,7 +106,7 @@ fi
 You may now emulate the monitoring events by running the following command in the product directory:
 
 ```bash
-MONITOR_INTERVAL=1 ./monitor-host-ping.sh
+./monitor-host-ping.sh
 ```
 
 To revert the change to the firewall, run the following command (in a different text terminal window or terminal multiplexer pane:
