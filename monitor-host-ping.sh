@@ -202,6 +202,29 @@ check_runtime_parameters(){
             return 2
         fi
     done
+
+    printf \
+        'Info: Checking the existence of the dependency external commands...\n'
+    local flag_external_command_check_failed=false
+    local -a required_commands=(
+        sleep
+    )
+    for command in "${required_commands[@]}"; do
+        if ! command -v "${command}" >/dev/null; then
+            flag_external_command_check_failed=true
+
+            printf \
+                'Error: This program requires the "%s" command to be available in your command search PATHs.\n' \
+                "${command}" \
+                1>&2
+        fi
+    done
+    if test "${flag_external_command_check_failed}" == true; then
+        printf \
+            'Error: Dependency external command existence check failed.\n' \
+            1>&2
+        return 2
+    fi
 }
 
 printf \
