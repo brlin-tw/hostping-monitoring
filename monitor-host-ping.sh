@@ -167,13 +167,16 @@ check_runtime_parameters(){
         monitor_host_down_threshold_ref
     )
     for parameter in "${non_negative_integer_parameters[@]}"; do
+        parameter_without_nameref_suffix="${parameter%_ref}"
+        parameter_original="${parameter_without_nameref_suffix^^*}"
+
         printf \
             "Info: Validating the %s parameter's value...\\n" \
-            "${parameter^^*}"
+            "${parameter_original^^*}"
         if ! [[ "${!parameter}" =~ ${regex_non_negative_integers} ]]; then
             printf \
                 "Error: The %s parameter's value should be an non-negative integer.\\n" \
-                "${parameter^^*}" \
+                "${parameter_original}" \
                 1>&2
             return 2
         fi
@@ -185,13 +188,16 @@ check_runtime_parameters(){
         check_ping_timeout_ref
     )
     for parameter in "${non_negative_fraction_parameters[@]}"; do
+        parameter_without_nameref_suffix="${parameter%_ref}"
+        parameter_original="${parameter_without_nameref_suffix^^*}"
+
         printf \
             "Info: Validating the %s parameter's value...\\n" \
-            "${parameter^^*}"
+            "${parameter_original}"
         if ! [[ "${!parameter}" =~ ${regex_non_negative_fraction_numbers} ]]; then
             printf \
                 "Error: The %s parameter's value should be an non-negative fractional number or integer.\\n" \
-                "${parameter^^*}" \
+                "${parameter_original}" \
                 1>&2
             return 2
         fi
