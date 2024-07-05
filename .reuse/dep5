@@ -4,7 +4,7 @@ Upstream-Contact: Issues · 林博仁 Buo-ren, Lin / Hostping monitoring · GitL
 Source: https://gitlab.com/brlin/hostping-monitoring
 
 Files:
- *README.md
- */README.md
+    *README.md
+    */README.md
 Copyright: 2024 林博仁(Buo-ren, Lin) <Buo.Ren.Lin@gmail.com>
 License: CC-BY-SA-4.0+

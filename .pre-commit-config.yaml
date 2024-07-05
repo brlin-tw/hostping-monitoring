@@ -6,7 +6,7 @@
 # https://github.com/Lin-Buo-Ren/common-precommit-config-template
 #
 # Copyright 2021 林博仁(Buo-ren, Lin) <Buo.Ren.Lin@gmail.com>
-# SPDX-License-Identifier: CC-BY-SA-4.0
+# SPDX-License-Identifier: CC-BY-SA-4.0 OR LicenseRef-Apache-2.0-If-Not-Used-In-Template-Projects
 
 repos:
   # Some out-of-the-box hooks for pre-commit
@@ -42,7 +42,7 @@ repos:
   # Check REUSE compliance
   # https://reuse.software/
   - repo: https://github.com/fsfe/reuse-tool
-    rev: v1.0.0
+    rev: v3.0.2
     hooks:
       - id: reuse
 
@@ -69,3 +69,7 @@ repos:
     hooks:
       - id: editorconfig-checker
         alias: ec
+        exclude: |
+          (?ix)^(
+            LICENSES/.*
+          )$
