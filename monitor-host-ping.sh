@@ -116,7 +116,7 @@ init(){
             host_state=UP
             printf \
                 'Info: The host UP threshold has exceeded, sending alert notification...\n'
-            if ! printf '*Hostping monitoring alert*\n\n*Info:* The "%s" host  resumed responding the ICMP echo packets and is now considered *UP*\.\n' "${CHECK_HOST}" | telegram-send "${telegram_send_opts[@]}"; then
+            if ! printf '*Hostping monitoring alert*\n\n*Info:* The "%s" host has resumed responding the ICMP echo packets and is now considered *UP*\.\n' "${CHECK_HOST}" | telegram-send "${telegram_send_opts[@]}"; then
                 printf \
                     'Error: Unable to send the monitoring start alert message.\n' \
                     1>&2
